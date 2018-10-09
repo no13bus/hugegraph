@@ -163,7 +163,7 @@ public class GraphIndexTransaction extends AbstractTransaction {
 
         // Delete unused index
         for (IndexLabel il : relatedIndexLabels(deletion)) {
-            if (!CollectionUtils.containsAny(il.indexFields(), incorrectPKs)) {
+            if (!CollectionUtil.hasIntersection(il.indexFields(), incorrectPKs)) {
                 continue;
             }
             // Skip if search index is not wrong
@@ -480,7 +480,7 @@ public class GraphIndexTransaction extends AbstractTransaction {
     private boolean matchSearchIndexWords(String propValue, String fieldValue) {
         Set<String> propValues = this.segmentWords(propValue);
         Set<String> words = this.segmentWords(fieldValue);
-        return CollectionUtils.containsAny(propValues, words);
+        return CollectionUtil.hasIntersection(propValues, words);
     }
 
     private Set<String> segmentWords(String text) {
@@ -522,7 +522,7 @@ public class GraphIndexTransaction extends AbstractTransaction {
             if (interIds == null) {
                 interIds = ids;
             } else {
-                interIds = CollectionUtils.intersection(interIds, ids);
+                interIds = CollectionUtil.intersectWithModify(interIds, ids);
             }
             if (ids.isEmpty() || interIds.isEmpty()) {
                 return ImmutableSet.of();
